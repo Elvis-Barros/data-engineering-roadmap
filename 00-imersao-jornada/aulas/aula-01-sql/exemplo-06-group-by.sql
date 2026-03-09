@@ -49,7 +49,25 @@ ORDER BY ticket_medio DESC;
 
 
 -- ============================================
--- 4. Produtos por categoria (contagem)
+-- 4. Vendas por mês (análise temporal)
+-- ============================================
+-- No dbt, gold_kpi_vendas_temporais faz essa análise com mais dimensões
+
+SELECT
+    EXTRACT(YEAR FROM data_venda::timestamp) AS ano,
+    EXTRACT(MONTH FROM data_venda::timestamp) AS mes,
+    SUM(quantidade * preco_unitario) AS receita_total,
+    COUNT(*) AS total_vendas,
+    COUNT(DISTINCT id_cliente) AS clientes_unicos
+FROM vendas
+GROUP BY
+    EXTRACT(YEAR FROM data_venda::timestamp),
+    EXTRACT(MONTH FROM data_venda::timestamp)
+ORDER BY ano, mes;
+
+
+-- ============================================
+-- 5. Produtos por categoria (contagem)
 -- ============================================
 
 SELECT
