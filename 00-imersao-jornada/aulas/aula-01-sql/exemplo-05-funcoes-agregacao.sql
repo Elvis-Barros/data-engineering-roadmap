@@ -1,72 +1,73 @@
 -- ============================================
--- EXEMPLO 5: Funções de Agregação
+-- EXEMPLO 05: Funções de Agregação - Métricas de negócio
 -- ============================================
--- Conceito: Calcular totais, médias, contagens, máximos e mínimos
---
--- FUNÇÕES DE AGREGAÇÃO DISPONÍVEIS:
--- - COUNT: Conta registros
--- - SUM: Soma valores
--- - AVG: Calcula média
--- - MAX: Encontra o maior valor
--- - MIN: Encontra o menor valor
---
--- IMPORTANTE:
--- - COUNT(*) conta todas as linhas (inclui NULLs)
--- - COUNT(coluna) conta apenas valores não-nulos
--- - COUNT(DISTINCT coluna) conta valores únicos
+-- Conceito: SUM, COUNT, AVG, MIN, MAX, COUNT DISTINCT
+-- Pergunta de negócio: Qual a receita total? Quantas vendas? Qual o ticket médio?
+-- Conexão com dbt: Métricas base de TODOS os KPIs gold
+--                  receita_total (SUM), total_vendas (COUNT), ticket_medio (AVG),
+--                  clientes_unicos (COUNT DISTINCT)
 
 -- ============================================
--- EXEMPLO 5A: COUNT, SUM e AVG
+-- 1. Contando registros
 -- ============================================
--- Pergunta: Qual é o total de vendas, receita total e ticket médio?
 
-SELECT 
-    COUNT(*) AS total_vendas,
-    SUM(quantidade) AS total_unidades_vendidas,
-    SUM(quantidade * preco_unitario) AS receita_total,
-    AVG(quantidade * preco_unitario) AS ticket_medio
-FROM 
-    vendas;
+-- Total de vendas
+SELECT COUNT(*) AS total_vendas
+FROM vendas;
 
--- ============================================
--- EXEMPLO 5B: MAX e MIN
--- ============================================
--- Pergunta: Qual é a maior e menor venda? Qual o produto mais caro?
+-- Total de produtos no catálogo
+SELECT COUNT(*) AS total_produtos
+FROM produtos;
 
-SELECT 
-    MAX(quantidade * preco_unitario) AS maior_venda,
-    MIN(quantidade * preco_unitario) AS menor_venda,
-    MAX(preco_unitario) AS maior_preco_unitario,
-    MIN(preco_unitario) AS menor_preco_unitario
-FROM 
-    vendas;
+-- Total de clientes
+SELECT COUNT(*) AS total_clientes
+FROM clientes;
+
 
 -- ============================================
--- EXEMPLO 5C: COUNT com DISTINCT
+-- 2. Receita total (SUM)
 -- ============================================
--- Pergunta: Quantos produtos diferentes foram vendidos? Quantos clientes únicos compraram?
 
-SELECT 
-    COUNT(DISTINCT id_produto) AS produtos_diferentes_vendidos,
+SELECT
+    SUM(quantidade * preco_unitario) AS receita_total
+FROM vendas;
+
+
+-- ============================================
+-- 3. Estatísticas de preço dos produtos (AVG, MIN, MAX)
+-- ============================================
+
+SELECT
+    AVG(preco_atual) AS preco_medio,
+    MIN(preco_atual) AS preco_minimo,
+    MAX(preco_atual) AS preco_maximo
+FROM produtos;
+
+
+-- ============================================
+-- 4. COUNT DISTINCT - Valores únicos
+-- ============================================
+-- No dbt gold, total_clientes_unicos usa COUNT(DISTINCT id_cliente)
+
+SELECT
     COUNT(DISTINCT id_cliente) AS clientes_unicos,
-    COUNT(*) AS total_vendas
-FROM 
-    vendas;
+    COUNT(DISTINCT id_produto) AS produtos_vendidos,
+    COUNT(DISTINCT canal_venda) AS canais_venda
+FROM vendas;
+
 
 -- ============================================
--- EXEMPLO 5D: Todas as funções juntas
+-- 5. Painel completo de métricas - estilo KPI gold
 -- ============================================
--- Pergunta: Resumo completo das vendas
+-- Todas as métricas que os modelos gold calculam, numa única query
 
-SELECT 
+SELECT
     COUNT(*) AS total_vendas,
-    COUNT(DISTINCT id_produto) AS produtos_unicos,
     COUNT(DISTINCT id_cliente) AS clientes_unicos,
-    SUM(quantidade) AS total_unidades,
+    COUNT(DISTINCT id_produto) AS produtos_vendidos,
+    SUM(quantidade) AS quantidade_total,
     SUM(quantidade * preco_unitario) AS receita_total,
     AVG(quantidade * preco_unitario) AS ticket_medio,
-    MAX(quantidade * preco_unitario) AS maior_venda,
-    MIN(quantidade * preco_unitario) AS menor_venda
-FROM 
-    vendas;
-
+    MIN(quantidade * preco_unitario) AS menor_venda,
+    MAX(quantidade * preco_unitario) AS maior_venda
+FROM vendas;
