@@ -217,15 +217,14 @@ ORDER BY, LIMIT            Agregações, GROUP BY      CASE WHEN, Window, CTE
 
 | | |
 |---|---|
-| **Conceito** | Criar colunas derivadas com aritmética e funções de data |
-| **Pergunta de negócio** | Qual a receita de cada venda? Em que dia da semana vendemos mais? |
-| **Conexão dbt** | `silver_vendas` calcula `receita_total = quantidade * preco_unitario` e extrai ano, mês, dia, dia_semana, hora |
+| **Conceito** | Criar colunas derivadas com aritmética |
+| **Pergunta de negócio** | Qual a receita de cada venda? |
+| **Conexão dbt** | `silver_vendas` calcula `receita_total = quantidade * preco_unitario` |
 
 **O que você aprende:**
 - Expressões aritméticas (`quantidade * preco_unitario`)
-- `EXTRACT(YEAR/MONTH/DAY/DOW/HOUR FROM timestamp)`
-- `TO_CHAR` para formatar datas
-- `DATE()` para converter timestamp
+- Criar colunas com `AS` (alias)
+- Receita como campo calculado
 
 ---
 
@@ -254,13 +253,12 @@ ORDER BY, LIMIT            Agregações, GROUP BY      CASE WHEN, Window, CTE
 | | |
 |---|---|
 | **Conceito** | Agrupar resultados por dimensão |
-| **Pergunta de negócio** | Qual a receita por canal de venda? E por mês? |
+| **Pergunta de negócio** | Qual a receita por canal de venda? E por categoria? |
 | **Conexão dbt** | `gold_kpi_receita_por_canal` agrupa receita por `canal_venda` |
 
 **O que você aprende:**
 - `GROUP BY` para agrupar
 - Combinar `GROUP BY` com funções de agregação
-- Agrupar por dimensões temporais (ano, mês)
 - Regra: toda coluna no `SELECT` deve estar no `GROUP BY` ou ser agregação
 
 ---
@@ -363,7 +361,7 @@ ORDER BY, LIMIT            Agregações, GROUP BY      CASE WHEN, Window, CTE
 | 01 | SELECT básico | 🥉 bronze (views raw) |
 | 02 | ORDER BY + LIMIT | 🥇 top N dos gold KPIs |
 | 03 | WHERE | 🥈 filtros de validação do silver |
-| 04 | Campos calculados | 🥈 `silver_vendas` (receita_total, datas) |
+| 04 | Campos calculados | 🥈 `silver_vendas` (receita_total) |
 | 05 | Funções de agregação | 🥇 métricas base dos gold KPIs |
 | 06 | GROUP BY | 🥇 `gold_kpi_receita_por_canal` |
 | 07 | JOIN | 🥈 `silver_vendas_enriquecidas` |
@@ -386,27 +384,25 @@ ORDER BY, LIMIT            Agregações, GROUP BY      CASE WHEN, Window, CTE
 5. Quais produtos custam entre R$ 100 e R$ 500? *(Exemplo 03)*
 6. Existem vendas com dados inválidos? *(Exemplo 03)*
 7. Qual a receita de cada venda? *(Exemplo 04)*
-8. Em que dia da semana vendemos mais? *(Exemplo 04)*
 
 ### 📈 Métricas e agrupamentos
-9. Qual a receita total e ticket médio? *(Exemplo 05)*
-10. Quantos clientes únicos compraram? *(Exemplo 05)*
-11. Qual a receita por canal de venda? *(Exemplo 06)*
-12. Qual a receita por mês? *(Exemplo 06)*
+8. Qual a receita total e ticket médio? *(Exemplo 05)*
+9. Quantos clientes únicos compraram? *(Exemplo 05)*
+10. Qual a receita por canal de venda? *(Exemplo 06)*
 
 ### 🔗 Análises com JOINs
-13. Quais produtos foram vendidos e para quem? *(Exemplo 07)*
-14. Qual a receita por categoria? *(Exemplo 08)*
-15. Qual a receita por marca? *(Exemplo 08)*
-16. Qual a receita por estado? *(Exemplo 08)*
+11. Quais produtos foram vendidos e para quem? *(Exemplo 07)*
+12. Qual a receita por categoria? *(Exemplo 08)*
+13. Qual a receita por marca? *(Exemplo 08)*
+14. Qual a receita por estado? *(Exemplo 08)*
 
 ### 🏷️ Classificações e rankings
-17. Qual a faixa de preço de cada produto? *(Exemplo 09)*
-18. Qual o ranking dos produtos por receita? *(Exemplo 10)*
-19. Qual o percentual de receita por canal? *(Exemplo 10)*
+15. Qual a faixa de preço de cada produto? *(Exemplo 09)*
+16. Qual o ranking dos produtos por receita? *(Exemplo 10)*
+17. Qual o percentual de receita por canal? *(Exemplo 10)*
 
 ### 🏆 Análise completa
-20. Como montar um KPI completo estilo dashboard? *(Exemplo 11)*
+18. Como montar um KPI completo estilo dashboard? *(Exemplo 11)*
 
 ---
 
@@ -417,7 +413,7 @@ Após completar os 11 exemplos, você deve ser capaz de:
 - [ ] Selecionar e explorar dados (`SELECT`, `LIMIT`)
 - [ ] Ordenar resultados (`ORDER BY`)
 - [ ] Filtrar registros (`WHERE`, `IN`, `BETWEEN`, `AND`/`OR`)
-- [ ] Criar campos calculados (aritmética, `EXTRACT`, `TO_CHAR`)
+- [ ] Criar campos calculados (aritmética)
 - [ ] Calcular agregações (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`)
 - [ ] Agrupar dados (`GROUP BY`)
 - [ ] Combinar tabelas (`INNER JOIN`, triple join)
@@ -450,4 +446,4 @@ Depois de dominar os 11 exemplos:
 
 ---
 
-**Total: 11 exemplos progressivos · 20 perguntas de negócio · tudo conectado com dbt** 🚀
+**Total: 11 exemplos progressivos · 18 perguntas de negócio · tudo conectado com dbt** 🚀
