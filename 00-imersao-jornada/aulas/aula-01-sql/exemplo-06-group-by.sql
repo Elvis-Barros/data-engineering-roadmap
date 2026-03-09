@@ -79,3 +79,22 @@ SELECT
 FROM produtos
 GROUP BY categoria
 ORDER BY total_produtos DESC;
+
+
+-- ============================================
+-- 6. HAVING - Filtrando grupos
+-- ============================================
+-- Pergunta de negócio: Quais categorias geram mais de R$ 50.000 em receita?
+-- WHERE filtra linhas ANTES do agrupamento
+-- HAVING filtra grupos DEPOIS do agrupamento
+
+SELECT
+    p.categoria,
+    SUM(v.quantidade * v.preco_unitario) AS receita_total,
+    COUNT(*) AS total_vendas
+FROM vendas v
+INNER JOIN produtos p
+    ON v.id_produto = p.id_produto
+GROUP BY p.categoria
+HAVING SUM(v.quantidade * v.preco_unitario) > 50000
+ORDER BY receita_total DESC;
