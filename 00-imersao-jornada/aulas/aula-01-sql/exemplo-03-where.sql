@@ -79,30 +79,7 @@ ORDER BY categoria, preco_atual DESC;
 
 
 -- ============================================
--- 6. Validação de dados - encontrando problemas
--- ============================================
--- No dbt, silver_vendas filtra: WHERE id_cliente IS NOT NULL AND id_produto IS NOT NULL
--- Aqui verificamos se existem vendas com quantidade ou preço inválido
-
--- Vendas com quantidade <= 0 (dados inválidos)
-SELECT
-    id_venda,
-    quantidade,
-    preco_unitario
-FROM vendas
-WHERE quantidade <= 0;
-
--- Vendas com preço unitário <= 0 (dados inválidos)
-SELECT
-    id_venda,
-    quantidade,
-    preco_unitario
-FROM vendas
-WHERE preco_unitario <= 0;
-
-
--- ============================================
--- 7. Combinando filtros com AND/OR
+-- 6. Combinando filtros com AND/OR
 -- ============================================
 -- Vendas do e-commerce com quantidade > 1 e preço > 100
 
